@@ -24,6 +24,7 @@ function New-State ($Query, $Filter, $CaseSensitive, $InvertFilter, $Config)
       'FilterType' = ''
       'QueryX' = 0
       'X' = 0
+      'RawUI' = Get-RawUI
       # 'Y' = 1 # 選択機能があれば...
     }
   }
