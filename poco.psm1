@@ -23,7 +23,7 @@ function Select-Poco {
   )
 
   try {
-    $Items = $input | %{,$_}
+    $Items = $input | ForEach-Object {,$_}
 
     $config = New-Config $Items $Property $Prompt $Layout $Keymaps # immutable
     $state  = New-State $Query $Filter $CaseSensitive $InvertFilter $config # mutable

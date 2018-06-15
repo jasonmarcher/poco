@@ -43,7 +43,7 @@ function Convert-QueryHash ($state)
   $property = ''
   $hash = @{$property = @()}
 
-  $state.Query -split ' ' | ?{$_ -ne ''} | %{
+  $state.Query -split ' ' | Where-Object {$_ -ne ''} | ForEach-Object {
     $token = $_
     
     if ($token.StartsWith(':'))
