@@ -25,8 +25,7 @@ function Where-Query
     {
       if ($property -eq '') {continue}
     
-      $l = ($obj | Get-Member $property).length
-      if ($l -eq 0) {continue}
+      if (-not (Get-Member $property -InputObject $obj)) {continue}
       
       foreach ($value in $hash[$property])
       {
