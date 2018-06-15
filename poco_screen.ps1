@@ -1,0 +1,90 @@
+function Write-Screen ($state, $config)
+{
+  switch ($config.Layout)
+  {
+    'TopDown'  {Write-TopDown  $state $config}
+    'BottomUp' {Write-BottomUp $state $config}
+  }
+}
+
+function Write-TopDown ($state, $config)
+{
+    Write-ScreenLine 0 $state.Screen.Prompt
+    Write-RightInfo 0 $state
+    
+    if ($state.Entry.length -ne $state.PrevLength)
+    {
+      $h = (Get-RawUI).WindowSize.Height
+      $entries = $state.Entry | Format-Table | Out-String -Stream | Select-Object -First ($h - 1)
+      if ($entries -is [string]) {$entries = ,@($entries)}
+      foreach ($i in 0..($h - 2))
+      {
+        $line = if ($i -lt $entries.length) {$entries[$i]} else {''}
+        Write-ScreenLine ($i + 1) $line
+      }
+
+      $state.PrevLength = $state.Entry.length
+    }
+
+    $x = Convert-CursorPositionX $state
+    Set-CursorPosition $x 0
+}
+
+function Write-BottomUp ($state, $config, $entries)
+{
+  if ($state.Entry.length -ne $state.PrevLength)
+  {
+    if ($state.Screen.Page -gt $m) {$state.Screen.Page = $m}
+
+    $h = (Get-RawUI).WindowSize.Height
+    $entries = $state.Entry | Format-Table | Out-String -Stream | Select-Object -First ($h - 1)
+    if ($entries -is [string]) {$entries = ,@($entries)}
+    foreach ($i in 0..($h - 2))
+    {
+      $line = if ($i -lt $entries.length) {$entries[$i]} else {''}
+      Write-ScreenLine $i $line
+    }
+    
+    $state.PrevLength = $state.Entry.length
+  }
+
+  Write-ScreenLine ($h - 1) $state.Screen.Prompt
+  Write-RightInfo ($h - 1) $state
+
+  $x = Convert-CursorPositionX $state
+  $y = (Get-RawUI).CursorPosition.Y
+  Set-CursorPosition $x $y
+}
+
+function Write-ScreenLine ($i, $line)
+{
+  $w = (Get-RawUI).BufferSize.Width
+  Set-CursorPosition 0 $i
+  ([string]$line).PadRight($w) | Write-Host -NoNewline
+}
+
+function Write-RightInfo ($i, $state)
+{
+  $f = $state.Screen.FilterType
+  $n = $state.Entry.Length
+
+  $h = (Get-RawUI).WindowSize.Height
+  
+  $info = "${f} [${n}]"
+  $w = (Get-RawUI).WindowSize.Width
+  Set-CursorPosition ($w - $info.length) $i
+  $info | Write-Host -NoNewline
+
+}
+
+function Convert-CursorPositionX ($state)
+{
+  $str = $state.Screen.Prompt.Substring(0, $state.Screen.X)
+  (Get-RawUI).LengthInBufferCells($str)
+}
+
+function Set-CursorPosition ($x, $y)
+{
+  $pos = New-Object System.Management.Automation.Host.Coordinates($x, $y)
+  (Get-RawUI).CursorPosition = $pos
+}
