@@ -60,20 +60,19 @@ function Write-ScreenLine ($state, $i, $line)
 {
   $w = $state.Screen.BufferSize.Width
   Set-CursorPosition 0 $i
-  ([string]$line).PadRight($w) | Write-Host -NoNewline
+  Write-Host ([string]$line).PadRight($w) -NoNewline
 }
 
 function Write-RightInfo ($i, $state)
 {
   $f = $state.Screen.FilterType
   $n = $state.Entry.Length
-
-  $h = $state.Screen.WindowSize.Height
+  $w = $state.Screen.WindowSize.Width
+  # $h = $state.Screen.WindowSize.Height
   
   $info = "${f} [${n}]"
-  $w = $state.Screen.WindowSize.Width
   Set-CursorPosition ($w - $info.length) $i
-  $info | Write-Host -NoNewline
+  Write-Host $info -NoNewline
 
 }
 

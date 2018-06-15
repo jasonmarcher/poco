@@ -17,10 +17,10 @@ function Backup-ScrBuf
 function Restore-ScrBuf
 {
     Clear-Host
-    $rui = Get-RawUI
-   
+
     if (-not (Test-Path 'variable:screen')) {return}
-   
+
+    $rui = Get-RawUI
     $origin = New-Object System.Management.Automation.Host.Coordinates(0, 0)
     $rui.SetBufferContents($origin, $script:screen)
     $pos = New-Object System.Management.Automation.Host.Coordinates(0, $script:screen.GetUpperBound(0))
