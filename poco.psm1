@@ -1,56 +1,50 @@
 # Load
-Split-Path $MyInvocation.MyCommand.Path -Parent | Push-Location
-Get-ChildItem poco_*.ps1 | %{. $_}
-Pop-Location
+Get-ChildItem -Path $PSScriptRoot -Include *.ps1 | ForEach-Object {. $_}
 
-function Select-Poco
-{
-  Param
-  (
-    [Object[]]$Property = $null,
-
-    [string]$Query = '',
-
+function Select-Poco {
+  param(
+    [Object[]]$Property = $null
+    ,
+    [string]$Query = ''
+    ,
     [ValidateSet('match', 'like', 'eq')]
-    [string]$Filter = 'match',
-
-    [switch]$CaseSensitive = $false,
-
-    [switch]$InvertFilter = $false,
-
-    [string]$Prompt = 'Query',
-
+    [string]$Filter = 'match'
+    ,
+    [switch]$CaseSensitive = $false
+    ,
+    [switch]$InvertFilter = $false
+    ,
+    [string]$Prompt = 'Query'
+    ,
     [ValidateSet('TopDown', 'BottomUp')]
-    [string]$Layout = 'TopDown',
-
+    [string]$Layout = 'TopDown'
+    ,
     [HashTable]$Keymaps = (New-PocoKeymaps)
   )
 
-  $Items = $input | %{,$_}
+  try {
+    $Items = $input | %{,$_}
 
-  $config = New-Config $Items $Property $Prompt $Layout $Keymaps # immutable
-  $state  = New-State $Query $Filter $CaseSensitive $InvertFilter $config # mutable
+    $config = New-Config $Items $Property $Prompt $Layout $Keymaps # immutable
+    $state  = New-State $Query $Filter $CaseSensitive $InvertFilter $config # mutable
 
-  Backup-ScrBuf
-  Clear-Host
+    Backup-ScrBuf
+    Clear-Host
 
-  $action = 'None'
-  while ($action -ne 'Cancel' -and $action -ne 'Finish')
-  {
-    Write-Screen $state $config
-    $key, $keystr = Get-PocoKey
-    $action = Get-Action $config $keystr
-    $state = Update-State $state $config $action $key
-  }
-  
-  Restore-ScrBuf
-  if ($action -eq 'Finish') {$state.Entry}
+    $action = 'None'
+    while ($action -ne 'Cancel' -and $action -ne 'Finish')
+    {
+      Write-Screen $state $config
+      $key, $keystr = Get-PocoKey
+      $action = Get-Action $config $keystr
+      $state = Update-State $state $config $action $key
+    }
 
-  trap
-  {
     Restore-ScrBuf
-    break
-  }  
+    if ($action -eq 'Finish') {$state.Entry}
+  } catch {
+    Restore-ScrBuf
+  }
 }
 
 Set-Alias poco Select-Poco
