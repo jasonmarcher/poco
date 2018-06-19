@@ -35,9 +35,11 @@ function Select-Poco {
     while ($action -ne 'Cancel' -and $action -ne 'Finish')
     {
       Write-Screen $state $config
-      $key, $keystr = Get-PocoKey
-      $action = Get-Action $config $keystr
-      $state = Update-State $state $config $action $key
+      do {
+        $key, $keystr = Get-PocoKey
+        $action = Get-Action $config $keystr
+        $state = Update-State $state $config $action $key
+      } while ([console]::KeyAvailable)
     }
 
     Restore-ScrBuf
