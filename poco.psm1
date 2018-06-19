@@ -1,5 +1,5 @@
 # Load
-Get-ChildItem -Path $PSScriptRoot -Include *.ps1 | ForEach-Object {. $_}
+Get-ChildItem -Path $PSScriptRoot -Include *.ps1 -Recurse | ForEach-Object {. $_}
 
 function Select-Poco {
   param(

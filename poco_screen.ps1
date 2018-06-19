@@ -14,7 +14,7 @@ function Write-TopDown ($state, $config)
     
     if ($state.Entry.length -ne $state.PrevLength)
     {
-      $h = $state.Screen.WindowSize.Height
+      $h = $state.Screen.RawUI.WindowSize.Height
       $entries = $state.Entry | Format-Table | Out-String -Stream | Select-Object -First ($h - 1)
       if ($entries -is [string]) {$entries = ,@($entries)}
       foreach ($i in 0..($h - 2))
@@ -34,9 +34,7 @@ function Write-BottomUp ($state, $config, $entries)
 {
   if ($state.Entry.length -ne $state.PrevLength)
   {
-    if ($state.Screen.Page -gt $m) {$state.Screen.Page = $m}
-
-    $h = $state.Screen.WindowSize.Height
+    $h = $state.Screen.RawUI.WindowSize.Height
     $entries = $state.Entry | Format-Table | Out-String -Stream | Select-Object -First ($h - 1)
     if ($entries -is [string]) {$entries = ,@($entries)}
     foreach ($i in 0..($h - 2))
@@ -52,13 +50,13 @@ function Write-BottomUp ($state, $config, $entries)
   Write-RightInfo ($h - 1) $state
 
   $x = Convert-CursorPositionX $state
-  $y = $state.Screen.CursorPosition.Y
+  $y = $state.Screen.RawUI.CursorPosition.Y
   Set-CursorPosition $x $y
 }
 
 function Write-ScreenLine ($state, $i, $line)
 {
-  $w = $state.Screen.BufferSize.Width
+  $w = $state.Screen.RawUI.BufferSize.Width
   Set-CursorPosition 0 $i
   Write-Host ([string]$line).PadRight($w) -NoNewline
 }
@@ -67,8 +65,8 @@ function Write-RightInfo ($i, $state)
 {
   $f = $state.Screen.FilterType
   $n = $state.Entry.Length
-  $w = $state.Screen.WindowSize.Width
-  # $h = $state.Screen.WindowSize.Height
+  $w = $state.Screen.RawUI.WindowSize.Width
+  # $h = $state.Screen.RawUI.WindowSize.Height
   
   $info = "${f} [${n}]"
   Set-CursorPosition ($w - $info.length) $i
@@ -79,7 +77,7 @@ function Write-RightInfo ($i, $state)
 function Convert-CursorPositionX ($state)
 {
   $str = $state.Screen.Prompt.Substring(0, $state.Screen.X)
-  $state.Screen.LengthInBufferCells($str)
+  $state.Screen.RawUI.LengthInBufferCells($str)
 }
 
 function Set-CursorPosition ($x, $y)
