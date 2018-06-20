@@ -40,6 +40,10 @@ function Select-Poco {
         $action = Get-Action $config $keystr
         $state = Update-State $state $config $action $key
       } while ([console]::KeyAvailable)
+      if ('ForwardChar','BackwardChar','BeginningOfLine','EndOfLine' -notcontains $action) {
+        ## TODO: Decide when to update filtered list of items based on the Query changing
+        $state.Entry = Get-Entry $state $config
+      }
     }
 
     Restore-ScrBuf

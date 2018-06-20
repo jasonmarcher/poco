@@ -31,7 +31,6 @@ function Add-Char ($state, $config, $char)
   $state.Screen.X++
 
   $state.Screen.Prompt = Get-Prompt $state $config
-  $state.Entry = Get-Entry $state $config
 }
 
 function Move-BackwardChar ($state)
@@ -79,7 +78,6 @@ function Remove-BackwardChar ($state)
     $state.Screen.X--
 
     $state.Screen.Prompt = Get-Prompt $state $config
-    $state.Entry = Get-Entry $state $config
   }
 }
 
@@ -95,7 +93,6 @@ function Remove-ForwardChar ($state)
   {
     $state.Query = $q.Remove($qx, 1)
     $state.Screen.Prompt = Get-Prompt $state $config
-    $state.Entry = Get-Entry $state $config
   }
 }
 
@@ -125,19 +122,16 @@ function Select-Matcher ($state)
   $state.Filter = $arr[$i % $n]
 
   $state.Screen.FilterType = Get-FilterType $state
-  $state.Entry = Get-Entry $state $config
 }
 
 function Switch-CaseSensitive ($state)
 {
   $state.CaseSensitive = -not $state.CaseSensitive
   $state.Screen.FilterType = Get-FilterType $state
-  $state.Entry = Get-Entry $state $config
 }
 
 function Switch-InvertFilter ($state)
 {
   $state.InvertFilter = -not $state.InvertFilter
   $state.Screen.FilterType = Get-FilterType $state
-  $state.Entry = Get-Entry $state $config
 }
