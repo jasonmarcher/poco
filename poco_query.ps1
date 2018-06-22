@@ -76,21 +76,21 @@ function Test-Matching
   {
     switch ($FilterType)
     {
-      'match'     {$p -match $value}
-      'like'      {$p -like  $value}
-      'eq'        {$p -eq    $value}
+      'match'     {$p -match $value; break}
+      'like'      {$p -like  $value; break}
+      'eq'        {$p -eq    $value; break}
 
-      'notmatch'  {$p -notmatch $value}
-      'notlike'   {$p -notlike  $value}
-      'neq'       {$p -ne       $value}
+      'notmatch'  {$p -notmatch $value; break}
+      'notlike'   {$p -notlike  $value; break}
+      'neq'       {$p -ne       $value; break}
 
-      'cmatch'    {$p -cmatch $value}
-      'clike'     {$p -clike  $value}
-      'ceq'       {$p -ceq    $value}
+      'cmatch'    {$p -cmatch $value; break}
+      'clike'     {$p -clike  $value; break}
+      'ceq'       {$p -ceq    $value; break}
 
-      'cnotmatch' {$p -cnotmatch $value}
-      'cnotlike'  {$p -cnotlike  $value}
-      'cneq'      {$p -cne       $value}
+      'cnotmatch' {$p -cnotmatch $value; break}
+      'cnotlike'  {$p -cnotlike  $value; break}
+      'cneq'      {$p -cne       $value; break}
     }
   }
   catch
