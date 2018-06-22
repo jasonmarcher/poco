@@ -27,7 +27,7 @@ function Write-TopDown ($state, $config)
     }
 
     $x = Convert-CursorPositionX $state
-    Set-CursorPosition $x 0
+    Set-CursorPosition $state $x 0
 }
 
 function Write-BottomUp ($state, $config, $entries)
@@ -51,14 +51,14 @@ function Write-BottomUp ($state, $config, $entries)
 
   $x = Convert-CursorPositionX $state
   $y = $state.Screen.RawUI.CursorPosition.Y
-  Set-CursorPosition $x $y
+  Set-CursorPosition $state $x $y
 }
 
 function Write-ScreenLine ($state, $i, $line)
 {
   $w = $state.Screen.RawUI.BufferSize.Width
-  Set-CursorPosition 0 $i
-  Write-Host ([string]$line).PadRight($w) -NoNewline
+  Set-CursorPosition $state 0 $i
+  Write-Host ([string]$line).PadRight($w) -NoNewline  ## TODO: replace
 }
 
 function Write-RightInfo ($i, $state)
@@ -69,8 +69,8 @@ function Write-RightInfo ($i, $state)
   # $h = $state.Screen.RawUI.WindowSize.Height
   
   $info = "${f} [${n}]"
-  Set-CursorPosition ($w - $info.length) $i
-  Write-Host $info -NoNewline
+  Set-CursorPosition $state ($w - $info.length) $i
+  Write-Host $info -NoNewline  ## TODO: replace
 
 }
 
@@ -80,8 +80,8 @@ function Convert-CursorPositionX ($state)
   $state.Screen.RawUI.LengthInBufferCells($str)
 }
 
-function Set-CursorPosition ($x, $y)
+function Set-CursorPosition ($state, $x, $y)
 {
   $pos = New-Object System.Management.Automation.Host.Coordinates($x, $y)
-  (Get-RawUI).CursorPosition = $pos
+  $state.Screen.RawUI.CursorPosition = $pos
 }
