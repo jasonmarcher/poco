@@ -1,7 +1,6 @@
 # http://d.hatena.ne.jp/newpops/20080514
 # スクリーンバッファのバックアップ
-function Backup-ScrBuf
-{
+function Backup-ScrBuf {
     $rui = Get-RawUI
 
     $rect = New-Object System.Management.Automation.Host.Rectangle
@@ -14,8 +13,7 @@ function Backup-ScrBuf
 
 # http://d.hatena.ne.jp/newpops/20080515
 # スクリーンバッファのリストア
-function Restore-ScrBuf
-{
+function Restore-ScrBuf {
     Clear-Host
 
     if (-not (Test-Path 'variable:screen')) {return}
