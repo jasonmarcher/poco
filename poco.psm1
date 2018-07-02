@@ -36,13 +36,13 @@ function Select-Poco {
             Write-Screen $state $config
 
             do {
+                $OldQuery = $State.Query -replace '(:\w+\s*)$|(\s+)$'
                 $key, $keystr = Get-PocoKey
                 $action = Get-Action $config $keystr
                 $state = Update-State $state $config $action $key
             } while ([console]::KeyAvailable)
 
-            if ('ForwardChar','BackwardChar','BeginningOfLine','EndOfLine' -notcontains $action) {
-                ## TODO: Decide when to update filtered list of items based on the Query changing
+            if ($OldQuery -ne ($State.Query -replace '(:\w+\s*)$|(\s+)$')) {
                 $state.Entry = Get-Entry $state $config
             }
         }
