@@ -56,4 +56,4 @@ function Select-Poco {
 
 Set-Alias poco Select-Poco
 
-Export-ModuleMember -Function "*-Poco*" -Alias "poco"
+Export-ModuleMember -Function "Select-Poco" -Alias "poco"
