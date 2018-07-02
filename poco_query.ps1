@@ -1,84 +1,83 @@
-function Where-Query {
-    param(
-        $state
-        ,
-        [Parameter(ValueFromPipeline=$True)]
-        $obj
-    )
-
-    begin {
-        $hash = Convert-QueryHash $state
-    }
-
-    process {
-        if ($hash.Contains('')) {
-        foreach ($value in $hash['']) {
-            $test = Test-Matching $state.Screen.FilterType $obj $value
-            if ($test -eq $false) {return}
-        }
-        }
-        
-        foreach ($property in $hash.Keys) {
-        if ($property -eq '') {continue}
-        
-        if (-not (Get-Member $property -InputObject $obj)) {continue}
-        
-        foreach ($value in $hash[$property]) {
-            $test = Test-Matching $state.Screen.FilterType $obj.$property $value
-            if ($test -eq $false) {return}
-        }
-        }
-
-        ,$obj
-    }
-}
-
 function Convert-QueryHash ($state) {
     $property = ''
     $hash = @{$property = @()}
 
     $state.Query -split ' ' | Where-Object {$_ -ne ''} | ForEach-Object {
         $token = $_
-        
+
         if ($token.StartsWith(':')) {
-        $property = $token.Remove(0, 1)
-        if (-not $hash.Contains($property)) {
-            $hash[$property] = @()
-        }
+            $property = $token.Remove(0, 1)
+            if (-not $hash.Contains($property)) {
+                $hash[$property] = @()
+            }
         } else {
-        $hash[$property] += $token
+            $hash[$property] += $token
         }
     }
 
     $hash
 }
 
-function Test-Matching {
+function Select-ByQuery {
     param(
-        [string] $FilterType,
-        [string] $p,    
-        [string] $value
+        $State
+        ,
+        [object[]] $Objects
     )
 
-    try {
-        switch ($FilterType) {
-        'match'     {$p -match $value; break}
-        'like'      {$p -like  $value; break}
-        'eq'        {$p -eq    $value; break}
-
-        'notmatch'  {$p -notmatch $value; break}
-        'notlike'   {$p -notlike  $value; break}
-        'neq'       {$p -ne       $value; break}
-
-        'cmatch'    {$p -cmatch $value; break}
-        'clike'     {$p -clike  $value; break}
-        'ceq'       {$p -ceq    $value; break}
-
-        'cnotmatch' {$p -cnotmatch $value; break}
-        'cnotlike'  {$p -cnotlike  $value; break}
-        'cneq'      {$p -cne       $value; break}
-        }
-    } catch {
-        $true
+    begin {
+        [Func[Object,bool]]$Delegate = New-QueryDelegate $State
     }
+
+    end {
+        [Linq.Enumerable]::Where($Objects, $Delegate)
+    }
+}
+
+function New-QueryDelegate {
+    param(
+        $State
+    )
+
+    $DelegateString = New-Object System.Text.StringBuilder
+
+    $DelegateString.Append('param($Object); ') > $null
+
+    $MatchType = switch ($State.Screen.FilterType) {
+        'match'     {"-match"; break}
+        'like'      {"-like"; break}
+        'eq'        {"-eq"; break}
+
+        'notmatch'  {"-notmatch"; break}
+        'notlike'   {"-notlike"; break}
+        'neq'       {"-ne"; break}
+
+        'cmatch'    {"-cmatch"; break}
+        'clike'     {"-clike"; break}
+        'ceq'       {"-ceq"; break}
+
+        'cnotmatch' {"-cnotmatch"; break}
+        'cnotlike'  {"-cnotlike"; break}
+        'cneq'      {"-cne"; break}
+    }
+
+    $HashQuery = Convert-QueryHash $State
+    if ($HashQuery.Contains('')) {
+        foreach ($Value in $HashQuery['']) {
+            $MatchLine = "`$Object $MatchType '$Value'"
+            $DelegateString.Append("if (($MatchLine) -eq `$false) {return `$false}; ") > $null
+        }
+    }
+
+    foreach ($Property in $HashQuery.Keys) {
+        if ($Property -eq '') {continue}
+
+        foreach ($Value in $HashQuery[$Property]) {
+            $MatchLine = "`$Object.$Property $MatchType '$Value'"
+            $DelegateString.Append("if (($MatchLine) -eq `$false) {return `$false}; ") > $null
+        }
+    }
+    $DelegateString.Append('return $true') > $null
+
+    [Scriptblock]::Create($DelegateString.ToString())
 }

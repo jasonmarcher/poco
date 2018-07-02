@@ -14,7 +14,5 @@ function Get-FilterType ($state) {
 }
 
 function Get-Entry ($state, $config) {
-    $config.Input |
-        Select-Object -Property $config.Property |
-        Where-Query $state
+    Select-ByQuery $State $Config.Input
 }

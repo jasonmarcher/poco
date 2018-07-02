@@ -61,6 +61,7 @@ Features:
   - Faster code
   - Batch processing of key presses
   - Only filter object list when necessary
+  - Filter object list with LINQ
 
 ## 2016-02-19 - Version 1.0.0 - yumura
 
