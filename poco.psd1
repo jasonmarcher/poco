@@ -1,6 +1,6 @@
 @{
     ## Module Info
-    ModuleVersion      = '1.0.0'
+    ModuleVersion      = '1.1.0'
     Description        = "Interactive filtering command based on peco"
     GUID               = 'fcdcab47-0505-4ba8-b845-538effc1d88e'
     # HelpInfoURI        = ''
