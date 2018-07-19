@@ -22,14 +22,14 @@
 
     ## Requirements
     # CompatiblePSEditions = @()
-    PowerShellVersion      = '3.0'
+    PowerShellVersion      = '2.0'
     # PowerShellHostName     = ''
     # PowerShellHostVersion  = ''
     RequiredModules        = @()
     RequiredAssemblies     = @()
     ProcessorArchitecture  = 'None'
-    DotNetFrameworkVersion = '2.0'
-    CLRVersion             = '2.0'
+    DotNetFrameworkVersion = '3.5'
+    CLRVersion             = '3.5'
 
     ## Author
     Author             = 'yumura'
