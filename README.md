@@ -7,4 +7,12 @@ A fork of [poco by yumura](https://gist.github.com/yumura/8df37c22ae1b7942dec7).
 
 - Interactively filter objects in the pipeline (interactive version of `Where-Object`)
 
+## Usage
+
+### Syntax
+
+```powershell
+Select-Poco [[-Property] <Object[]>] [[-Query] <string>] [[-Filter] {match | like | eq}] [[-Prompt] <string>] [[-Layout] {TopDown | BottomUp}] [[-Keymaps] <hashtable>] [-CaseSensitive] [-InvertFilter]
+ ```
+
 ## Install
