@@ -21,11 +21,11 @@ Select-Poco [[-Property] <Object[]>] [[-Query] <string>] [[-Filter] {match | lik
 Inspect
 
 ```powershell
-PS> Save-Module -Name poco -Path <path>
+Save-Module -Name poco -Path <path>
 ```
 
 Install
 
 ```powershell
-PS> Install-Module -Name poco
+Install-Module -Name poco
 ```
