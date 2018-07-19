@@ -1,6 +1,6 @@
 # Requirements
 if ($Host.Name -eq "Windows PowerShell ISE Host") {
-    throw "Poco is not compatible with Windows PowerShell ISE."
+    throw "poco is not compatible with Windows PowerShell ISE."
 
     ## TODO: Add a more specific test for the ability to modify the console output buffer which is the real compatibility issue
 }
@@ -8,6 +8,7 @@ if ($Host.Name -eq "Windows PowerShell ISE Host") {
 # Load
 Get-ChildItem -Path $PSScriptRoot -Include *.ps1 -Recurse | ForEach-Object {. $_}
 
+# .ExternalHelp poco-help.xml
 function Select-Poco {
     param(
         [Object[]]$Property = $null
