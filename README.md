@@ -17,3 +17,15 @@ Select-Poco [[-Property] <Object[]>] [[-Query] <string>] [[-Filter] {match | lik
  ```
 
 ## Install
+
+Inspect
+
+```powershell
+PS> Save-Module -Name poco -Path <path>
+```
+
+Install
+
+```powershell
+PS> Install-Module -Name poco
+```
