@@ -40,13 +40,13 @@
     PrivateData        = @{
         PSData = @{
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags = @("productivity","filter")
+            Tags = @("productivity","filter","pipeline")
 
             # A URL to the license for this module.
             # LicenseUri = ''
 
             # A URL to the main website for this project.
-            ProjectUri = ''
+            ProjectUri = 'https://github.com/jasonmarcher/poco'
 
             # A URL to an icon representing this module.
             # IconUri = ''
