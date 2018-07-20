@@ -7,6 +7,8 @@ A fork of [poco by yumura](https://gist.github.com/yumura/8df37c22ae1b7942dec7).
 
 - Interactively filter objects in the pipeline (interactive version of `Where-Object`)
 
+![Example of poco in action](docs/demos/poco-ps.gif)
+
 ## Usage
 
 ### Syntax
