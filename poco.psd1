@@ -53,7 +53,7 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = @"
-## 2016-02-19 - Version 1.1.0 - Jason Archer
+## 2018-07-19 - Version 1.1.0 - Jason Archer
 
 Features:
 
