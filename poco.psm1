@@ -43,8 +43,9 @@ function Select-Poco {
         while ($action -ne 'Cancel' -and $action -ne 'Finish') {
             Write-Screen $state $config
 
+            $OldQuery = $State.Query -replace '(:\w+\s*)$|(\s+)$'
+
             do {
-                $OldQuery = $State.Query -replace '(:\w+\s*)$|(\s+)$'
                 $key, $keystr = Get-PocoKey
                 $action = Get-Action $config $keystr
                 $state = Update-State $state $config $action $key
