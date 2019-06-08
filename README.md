@@ -31,3 +31,9 @@ Install
 ```powershell
 Install-Module -Name poco
 ```
+
+## Build
+
+```powershell
+Invoke-PSake build
+```
