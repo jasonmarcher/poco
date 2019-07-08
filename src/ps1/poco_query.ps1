@@ -62,6 +62,10 @@ function New-QueryDelegate {
     }
 
     $HashQuery = Convert-QueryHash $State
+
+    ## This search always treats multiple conditions as boolean AND joined
+
+    ## String representation search
     if ($HashQuery.Contains('')) {
         foreach ($Value in $HashQuery['']) {
             $MatchLine = "`$Object $MatchType '$Value'"
@@ -69,6 +73,7 @@ function New-QueryDelegate {
         }
     }
 
+    ## Property value search
     foreach ($Property in $HashQuery.Keys) {
         if ($Property -eq '') {continue}
 
@@ -77,6 +82,8 @@ function New-QueryDelegate {
             $DelegateString.Append("if (($MatchLine) -eq `$false) {return `$false}; ") > $null
         }
     }
+
+    ## Object passed all tests, so it passes the filter
     $DelegateString.Append('return $true') > $null
 
     [Scriptblock]::Create($DelegateString.ToString())
