@@ -27,36 +27,44 @@ function Select-Poco {
         [HashTable]$Keymaps = (New-PocoKeymaps)
     )
 
-    try {
-        $Items = $input | ForEach-Object {,$_}
+    begin {
+        $Items = New-Object System.Collections.ArrayList
+    }
 
-        $config = New-Config $Items $Property $Prompt $Layout $Keymaps # immutable
-        $state  = New-State $Query $Filter $CaseSensitive $InvertFilter $config # mutable
+    process {
+        $Items.Add($_)
+    }
 
-        Backup-ScrBuf
-        Clear-Host
+    end {
+        try {
+            $config = New-Config $Items $Property $Prompt $Layout $Keymaps # immutable
+            $state  = New-State $Query $Filter $CaseSensitive $InvertFilter $config # mutable
 
-        $action = 'None'
-        while ($action -ne 'Cancel' -and $action -ne 'Finish') {
-            Write-Screen $state $config
+            Backup-ScrBuf
+            Clear-Host
 
-            $OldQuery = $State.Query -replace '(:\w+\s*)$|(\s+)$'
+            $action = 'None'
+            while ($action -ne 'Cancel' -and $action -ne 'Finish') {
+                Write-Screen $state $config
 
-            do {
-                $key, $keystr = Get-PocoKey
-                $action = Get-Action $config $keystr
-                $state = Update-State $state $config $action $key
-            } while ([console]::KeyAvailable)
+                $OldQuery = $State.Query -replace '(:\w+\s*)$|(\s+)$'
 
-            if ($OldQuery -ne ($State.Query -replace '(:\w+\s*)$|(\s+)$')) {
-                $state.Entry = Get-Entry $state $config
+                do {
+                    $key, $keystr = Get-PocoKey
+                    $action = Get-Action $config $keystr
+                    $state = Update-State $state $config $action $key
+                } while ([console]::KeyAvailable)
+
+                if ($OldQuery -ne ($State.Query -replace '(:\w+\s*)$|(\s+)$')) {
+                    $state.Entry = Get-Entry $state $config
+                }
             }
-        }
 
-        Restore-ScrBuf
-        if ($action -eq 'Finish') {$state.Entry}
-    } catch {
-        Restore-ScrBuf
+            Restore-ScrBuf
+            if ($action -eq 'Finish') {$state.Entry}
+        } catch {
+            Restore-ScrBuf
+        }
     }
 }
 
