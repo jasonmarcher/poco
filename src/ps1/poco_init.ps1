@@ -16,6 +16,7 @@ function New-State ($Query, $Filter, $CaseSensitive, $InvertFilter, $Config) {
         'InvertFilter' = $InvertFilter
         'Acrion' = 'Identity'
         'Entry' = @()
+        'Properties' = @()
         'PrevLength' = 0
         'Screen' = @{
         'Prompt' = ''
@@ -33,6 +34,11 @@ function New-State ($Query, $Filter, $CaseSensitive, $InvertFilter, $Config) {
     $state.Screen.X = $state.Screen.Prompt.Length
 
     $state.Entry = Get-Entry $state $config
+
+    $FirstItem = $config.Input[0]
+    if ($FirstItem) {
+        $state.Properties += $FirstItem.PSObject.Properties
+    }
 
     $state
 }

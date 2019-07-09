@@ -6,7 +6,7 @@ function Convert-QueryHash ($state) {
         $token = $_
 
         if ($token.StartsWith(':')) {
-            $property = $token.Remove(0, 1)
+            $property = Resolve-PropertyName $state $token.Remove(0, 1)
             if (-not $hash.Contains($property)) {
                 $hash[$property] = @()
             }
@@ -87,4 +87,23 @@ function New-QueryDelegate {
     $DelegateString.Append('return $true') > $null
 
     [Scriptblock]::Create($DelegateString.ToString())
+}
+
+function Resolve-PropertyName {
+    param (
+        $State
+        ,
+        $Alias
+    )
+    
+    ## TODO: This algorithm needs to be optimized
+
+    $Properties = $State.Properties | Select-Object -ExpandProperty Name | Sort-Object
+    foreach ($Property in $Properties) {
+        if ($Property -like "${Alias}*") {
+            return $Property
+        }
+    }
+
+    return ""
 }
