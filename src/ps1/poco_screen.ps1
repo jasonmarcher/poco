@@ -69,6 +69,6 @@ function Convert-CursorPositionX ($state) {
 }
 
 function Set-CursorPosition ($state, $x, $y) {
-    $pos = New-Object System.Management.Automation.Host.Coordinates($x, $y)
+    $pos = [System.Management.Automation.Host.Coordinates]::new($x, $y)
     $state.Screen.RawUI.CursorPosition = $pos
 }

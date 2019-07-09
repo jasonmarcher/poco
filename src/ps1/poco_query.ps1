@@ -39,7 +39,7 @@ function New-QueryDelegate {
         $State
     )
 
-    $DelegateString = New-Object System.Text.StringBuilder
+    $DelegateString = [System.Text.StringBuilder]::new()
 
     $DelegateString.Append('param($Object); ') > $null
 
@@ -100,7 +100,7 @@ function Resolve-PropertyName {
 
     $Properties = $State.Properties | Select-Object -ExpandProperty Name | Sort-Object
     foreach ($Property in $Properties) {
-        if ($Property -like "${Alias}*") {
+        if ($Property -like "$Alias*") {
             return $Property
         }
     }

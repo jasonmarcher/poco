@@ -28,11 +28,11 @@ function Select-Poco {
     )
 
     begin {
-        $Items = New-Object System.Collections.ArrayList
+        $Items = [System.Collections.ArrayList]::new()
     }
 
     process {
-        $Items.Add($_)
+        $null = $Items.Add($_)
     }
 
     end {
