@@ -1,0 +1,34 @@
+TOPIC
+    about_poco
+
+SHORT DESCRIPTION
+    poco is a PowerShell port of peco (https://github.com/peco/peco) and
+    offers in-pipeline, interactive filtering of objects or text.
+
+LONG DESCRIPTION
+    
+    Select-Poco will collect all pipeline input and display a blocking,
+    interactive UI.
+
+    Queries
+        The format for queries is simplistic but does support most of the
+        basic comparison operators.
+
+        The query line accepts a list of space separated patterns and
+        commands.  Each pattern is boolean AND joined to all other patterns
+        entered.  All patterns will use the same matching modes.
+
+        Pattern modes are "regex", "like" or "eq".  Additionally there is
+        case sensitive mode and inverted mode ("not").  Modes are switched by
+        their corresponding key binding or by parameters on Select-Poco.
+
+        Commands between with ":" and change the following patterns to match
+        against the object property that matches the name in the command until
+        another command is entered.  For example, ":name foo" will match "foo"
+        against the values in the "Name" property of all input objects.
+
+FEEDBACK
+    Please submit suggestions, bug reports or questions to the poco
+    website.
+
+        https://github.com/jasonmarcher/poco
